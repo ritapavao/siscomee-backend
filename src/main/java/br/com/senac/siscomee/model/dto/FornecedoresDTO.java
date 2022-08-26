@@ -13,8 +13,10 @@ public class FornecedoresDTO implements Serializable {
 	private String nuTelefone;
 	private short inAtivo;
 	private Integer ramoSetorId;
+	private String nmRamoSetor;
 	private int usuarioIdAtualiza;
 	private Date dtUltAtualiza;
+	
 	
 	public Integer getId() {
 		return id;
@@ -43,15 +45,17 @@ public class FornecedoresDTO implements Serializable {
 	public short getInAtivo() {
 		return inAtivo;
 	}
-	public void setInAtivo(short inAtivo) {
-		this.inAtivo = inAtivo;
+	public void setInAtivo(short s) {
+		this.inAtivo = s;
 	}
-	public Integer getRamoSetorId() {
+	
+	public int getRamoSetorId() {
 		return ramoSetorId;
 	}
-	public void setRamoSetorId(Integer ramoSetorId) {
-		this.ramoSetorId = ramoSetorId;
+	public void setRamoSetorId(int i) {
+		this.ramoSetorId = i;
 	}
+	
 	public int getUsuarioIdAtualiza() {
 		return usuarioIdAtualiza;
 	}
@@ -63,6 +67,13 @@ public class FornecedoresDTO implements Serializable {
 	}
 	public void setDtUltAtualiza(Date dtUltAtualiza) {
 		this.dtUltAtualiza = dtUltAtualiza;
+	}
+	
+	public String getNmRamoSetor() {
+		return nmRamoSetor;
+	}
+	public void setNmRamoSetor(String string) {
+		this.nmRamoSetor = string;
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;

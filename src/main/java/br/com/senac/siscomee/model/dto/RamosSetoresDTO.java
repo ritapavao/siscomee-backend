@@ -21,7 +21,7 @@ public class RamosSetoresDTO implements Serializable {
 		this.id = id;
 	}
 
-	public String getNmRamoSetor() {
+	public  String getNmRamoSetor() {
 		return nmRamoSetor;
 	}
 

@@ -8,9 +8,9 @@ public interface FornecedoresRet {
 	String  getNmFornecedor();
 	String  getNuCnpj();
 	String  getNuTelefone();
-	Integer getRamoSetorId();
-	String  getNmRamoSetor();
-	Boolean getInAtivo();
+	String  getInAtivo();
 	Integer getUsuarioIdAtualiza();
 	Date    getDtUltAtualiza();
+	Integer getRamoSetorId();
+	String  getNmRamoSetor();
 }

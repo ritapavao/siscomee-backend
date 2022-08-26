@@ -6,13 +6,13 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
+import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.senac.siscomee.model.dto.FornecedoresDTO;
 import br.com.senac.siscomee.model.entidades.Fornecedores;
@@ -24,131 +24,155 @@ import br.com.senac.siscomee.model.specifications.RamoSetoresRet;
 @Service
 public class FornecedorService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FornecedorService.class);
-	private Date dataLocal = new Date();
+    private static final Logger LOGGER = LoggerFactory.getLogger(FornecedorService.class);
+    private Date dataLocal = new Date();
 
-	@Autowired
+    @Autowired
 	private FornecedorRepository fornecedorRepository;
-	
-	@PersistenceContext
-	private EntityManager entityManager;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	public FornecedorService(FornecedorRepository fornecedorRepository) {
-		this.fornecedorRepository = fornecedorRepository;
+    public List<FornecedoresRet> listarFornecedores() {
+    	return this.fornecedorRepository.listarFornecedores();
 	}
 
-	public List<Fornecedores> listarTodos() {
-		return this.fornecedorRepository.findAll();
-	}
-
-	public List<FornecedoresDTO> listarTodosAsDTO() {
-
+	public List<FornecedoresDTO> listarDocsOrcamentariosDTO()
+	{
 		List<FornecedoresDTO> listaDTO = new ArrayList<>();
-		for (Fornecedores fornecedor : this.fornecedorRepository.findAll()) {
+		
+		for(Fornecedores Fornecedor : this.fornecedorRepository.findAll()) {
 			FornecedoresDTO dto = new FornecedoresDTO();
-			dto.setId(fornecedor.getId());
-			dto.setNmFornecedor(fornecedor.getNmFornecedor());
-			dto.setNuCnpj(fornecedor.getNuCnpj());
-			dto.setNuTelefone(fornecedor.getNuTelefone());
-			dto.setRamoSetorId(fornecedor.getRamoSetorId());
-			dto.setInAtivo(fornecedor.getInAtivo());
-			dto.setUsuarioIdAtualiza(fornecedor.getUsuarioIdAtualiza());
-			dto.setDtUltAtualiza(fornecedor.getDtUltAtualiza());
-			listaDTO.add(dto);
-		}
-
-		return listaDTO;
+				 dto.setId(Fornecedor.getId());
+				 dto.setNmFornecedor(Fornecedor.getNmFornecedor());
+				 dto.setNuCnpj(Fornecedor.getNuCnpj());
+				 dto.setNuTelefone(Fornecedor.getNuTelefone());
+	             dto.setRamoSetorId(Fornecedor.getRamoSetorId().getId());
+	             dto.setNmRamoSetor(Fornecedor.getRamoSetorId().getNmRamoSetor());
+				 dto.setInAtivo(Fornecedor.getInAtivo());
+				 dto.setDtUltAtualiza(Fornecedor.getDtUltAtualiza());
+				 dto.setUsuarioIdAtualiza(Fornecedor.getUsuarioIdAtualiza());
+				 listaDTO.add(dto);
+			}
+			
+			return listaDTO;
 	}
 	
-	public List<Fornecedores> isSaveValid(String nmFornecedor) {
-		return fornecedorRepository.findByNmFornecedor(nmFornecedor);
-	}
-
-	public Fornecedores saveFornecedor(Fornecedores fornecedor) {
+	public Fornecedores addFornecedor(Fornecedores fornecedor)
+	{
 		return fornecedorRepository.save(fornecedor);
 	}
+	
+	public Fornecedores atualizarFornecedor(Fornecedores fornecedor)
+	{
+		Fornecedores Fornecedor = fornecedorRepository.findById(fornecedor.getId()).orElse(null);
 
-	public List<Fornecedores> saveFornecedorList(List<Fornecedores> fornecedor) {
-		return fornecedorRepository.saveAll(fornecedor);
-	}
-
-	public List<Fornecedores> getFornecedor() {
-		return fornecedorRepository.findAll();
-	}
-
-	public Fornecedores getFornecedorById(int id) {
-		return fornecedorRepository.findById(id).orElse(null);
-	}
-
-	public Fornecedores updateFornecedor(Fornecedores fornecedoresDTO) {
-		Fornecedores existeFornecedor = fornecedorRepository.findById(fornecedoresDTO.getId())
-				.orElse(null);
-		existeFornecedor.setNmFornecedor(fornecedoresDTO.getNmFornecedor());
-		existeFornecedor.setNuCnpj(fornecedoresDTO.getNuCnpj());
-		existeFornecedor.setNuTelefone(fornecedoresDTO.getNuTelefone());
-		existeFornecedor.setRamoSetorId(fornecedoresDTO.getRamoSetorId());
-		existeFornecedor.setInAtivo(fornecedoresDTO.getInAtivo());
-		existeFornecedor.setUsuarioIdAtualiza(fornecedoresDTO.getUsuarioIdAtualiza());
-		existeFornecedor.setDtUltAtualiza(this.dataLocal);
-		return fornecedorRepository.save(existeFornecedor);
+		Fornecedor.setNmFornecedor(fornecedor.getNmFornecedor());
+		Fornecedor.setNuCnpj(fornecedor.getNuCnpj());
+		Fornecedor.setNuTelefone(fornecedor.getNuTelefone());
+		Fornecedor.setInAtivo(fornecedor.getInAtivo());
+		Fornecedor.setRamoSetorId(fornecedor.getRamoSetorId());
+		Fornecedor.setUsuarioIdAtualiza(fornecedor.getUsuarioIdAtualiza());
+		Fornecedor.setDtUltAtualiza(this.dataLocal);
+		
+		return fornecedorRepository.save(Fornecedor);
 	}
 	
-	public Fornecedores inativarFornecedor(Fornecedores fornecedoresDTO) {
-		Fornecedores existeFornecedor = fornecedorRepository.findById(fornecedoresDTO.getId())
-				.orElse(null);
-		existeFornecedor.setNmFornecedor(fornecedoresDTO.getNmFornecedor());
-		existeFornecedor.setNuCnpj(fornecedoresDTO.getNuCnpj());
-		existeFornecedor.setNuTelefone(fornecedoresDTO.getNuTelefone());
-		existeFornecedor.setInAtivo(fornecedoresDTO.getInAtivo());
-		existeFornecedor.setUsuarioIdAtualiza(fornecedoresDTO.getUsuarioIdAtualiza());
-		existeFornecedor.setUsuarioIdAtualiza(fornecedoresDTO.getUsuarioIdAtualiza());
-		return fornecedorRepository.save(existeFornecedor);
-	}
-
-	public String deleleFornecedor(int id) {
-		fornecedorRepository.deleteById(id);
-		return "Cadastro removido com sucesso!" + id;
-	}
-
-	public Page<FornecedoresRet> buscarFornecedorPageSort( String nmFornecedor, String nuCnpj, String nuTelefone, Integer ramoSetorId, String nmRamoSetor, Short inAtivo,
-			Integer page, Integer size) {
-
-		//Pageable paging = PageRequest.of(page, size, Sort.by("inAtivo").descending());
-		
-
-		Page<FornecedoresRet> pageFornecedor;
-
-		if ((inAtivo != null)  && (nmFornecedor == null))
-			pageFornecedor = fornecedorRepository.findByInAtivo(inAtivo, null);
-		
-		else if ((inAtivo != null) && (nmFornecedor == null))
-			pageFornecedor = fornecedorRepository.findByInAtivoAndNmFornecedorContaining(inAtivo,nmFornecedor, null);
-		
-
-		else if ((inAtivo != null) && (nmFornecedor != null))
-			pageFornecedor = fornecedorRepository.findByInAtivoAndNmFornecedorContaining(inAtivo, nmFornecedor, null);
-		
-		else if ((nmFornecedor != null) && (inAtivo == null))
-			pageFornecedor = fornecedorRepository.findByNmFornecedorContaining(nmFornecedor, null);
-		
-		else if ((nmFornecedor != null) && (inAtivo != null))
-			pageFornecedor = fornecedorRepository.findByInAtivoAndNmFornecedorContaining(inAtivo,
-					nmFornecedor, null);
-		else
-			pageFornecedor = fornecedorRepository.listarFornecedores(null);
-
-		return pageFornecedor;
-	}
-	
-  // combo ramo (Setores)
+	// combo ramo(setores)
 	public List<RamoSetoresRet> getRamoSetores()
 	{
 		return fornecedorRepository.getRamoSetores();
 	}
+	
+	public Fornecedores getFornecedorById(int id)
+	{
+		return fornecedorRepository.findById(id).orElse(null);
+	}	
+	
+	public Fornecedores inativarFornecedorByID(int idFornecedor)
+	{
+		Fornecedores Fornecedor = fornecedorRepository.findById(idFornecedor).orElse(null);
 
-    public Page<FornecedoresRet> listarFornecedores() {
-    	return this.fornecedorRepository.listarFornecedores(null);
+		Fornecedor.setInAtivo((short) 0);		
+		Fornecedor.setDtUltAtualiza(this.dataLocal);
+
+		return fornecedorRepository.save(Fornecedor);
 	}
-	    
-	    
+	
+	public List<FornecedoresDTO> filtrarFornecedores(int idRamo, String nmFornecedor, int situacao)
+	{
+		String Sql = "select F from Fornecedores F "
+				   
+				   	+ "where 1=1";
+
+					if(idRamo != 0)
+					{
+						Sql += " and F.ramoSetorId = " + idRamo;
+					}
+					
+					if(!nmFornecedor.equals(null) && !nmFornecedor.equals("nulo"))
+					{
+						Sql += " and F.nmFornecedor like '%" + nmFornecedor + "%'";
+					}
+					
+					if(situacao != -1)
+					{
+						Sql += " and F.inAtivo = " + situacao;
+					}
+				
+					   	Sql += " order by F.inAtivo desc";
+
+					Query q = entityManager.createQuery(Sql);
+		
+					List<Fornecedores> Lista = q.getResultList();
+					
+					List<FornecedoresDTO> listaDTO = new ArrayList<>();
+					
+					for(Fornecedores Fornecedor : Lista)
+					{
+						FornecedoresDTO dto = new FornecedoresDTO();
+							 
+							 dto.setId(Fornecedor.getId());
+							 dto.setNmFornecedor(Fornecedor.getNmFornecedor());
+							 dto.setNuCnpj(Fornecedor.getNuCnpj());
+							 dto.setNuTelefone(Fornecedor.getNuTelefone());
+				             dto.setRamoSetorId(Fornecedor.getRamoSetorId().getId());
+							 dto.setInAtivo(Fornecedor.getInAtivo());
+							 dto.setNmRamoSetor(Fornecedor.getRamoSetorId().getNmRamoSetor());
+							 dto.setDtUltAtualiza(Fornecedor.getDtUltAtualiza());
+							 dto.setUsuarioIdAtualiza(Fornecedor.getUsuarioIdAtualiza());
+							 listaDTO.add(dto);
+					}
+						
+					return listaDTO;
+	}
+	
+	public Boolean unicidade(int idRamo, String nmFornecedor, String id)
+	{
+		String Sql = "select f from Fornecedores f "
+				   	+ "where 1=1 "
+					+ "and f.ramoSetorId = " + idRamo;
+					
+					if(!nmFornecedor.equals(null) && !nmFornecedor.equals("nulo"))
+					{
+						Sql += " and f.nmFornecedor = '" + nmFornecedor + "'";
+					}
+
+					if(!id.equals("null"))
+					{
+						Sql += " and f.id != " + id;
+					}
+
+					Query q = entityManager.createQuery(Sql);
+		
+					List<Fornecedores> Lista = q.getResultList();
+						
+					return Lista.size() > 0 ? false : true;
+	}
+
+	@Transactional
+	public void execute(String sql)
+	{
+		entityManager.createNativeQuery(sql).getResultList();		
+	}
 }

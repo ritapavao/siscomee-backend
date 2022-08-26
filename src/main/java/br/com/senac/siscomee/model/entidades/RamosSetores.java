@@ -50,15 +50,7 @@ public class RamosSetores implements Serializable {
     @Basic(optional = false)
     @Column(name = "dt_ult_atualiza")
     private Date dtUltAtualiza;
-  
-
-    public Collection<Fornecedores> getFornecedoresCollection() {
-		return fornecedoresCollection;
-	}
-
-	public void setFornecedoresCollection(Collection<Fornecedores> fornecedoresCollection) {
-		this.fornecedoresCollection = fornecedoresCollection;
-	}
+ 
 
 	public RamosSetores() {
     }
@@ -98,6 +90,14 @@ public class RamosSetores implements Serializable {
 	public void setInAtivo(short inAtivo) {
 		this.inAtivo = inAtivo;
 	}
+	
+	public Collection<Fornecedores> getFornecedoresCollection() {
+			return fornecedoresCollection;
+	}
+
+	public void setFornecedoresCollection(Collection<Fornecedores> fornecedoresCollection) {
+			this.fornecedoresCollection = fornecedoresCollection;
+	}
 
 	public int getUsuarioIdAtualiza() {
 		return usuarioIdAtualiza;
@@ -124,29 +124,22 @@ public class RamosSetores implements Serializable {
 		return Objects.hash(dtUltAtualiza, id, inAtivo, nmRamoSetor, usuarioIdAtualiza);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RamosSetores other = (RamosSetores) obj;
-		return Objects.equals(dtUltAtualiza, other.dtUltAtualiza) && Objects.equals(id, other.id)
-				&& inAtivo == other.inAtivo && Objects.equals(nmRamoSetor, other.nmRamoSetor)
-				&& usuarioIdAtualiza == other.usuarioIdAtualiza;
-	}
+	  @Override
+	    public boolean equals(Object object) {
+	        // TODO: Warning - this method won't work in the case the id fields are not set
+	        if (!(object instanceof RamosSetores)) {
+	            return false;
+	        }
+	        RamosSetores other = (RamosSetores) object;
+	        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+	            return false;
+	        }
+	        return true;
+	    }
 
-	@Override
-	public String toString() {
-		return "RamoSetor [id=" + id + ", nmRamoSetor=" + nmRamoSetor + ", inAtivo=" + inAtivo + ", usuarioIdAtualiza="
-				+ usuarioIdAtualiza + ", dtUltAtualiza=" + dtUltAtualiza + ", getId()=" + getId()
-				+ ", getNmRamoSetor()=" + getNmRamoSetor() + ", getInAtivo()=" + getInAtivo()
-				+ ", getUsuarioIdAtualiza()=" + getUsuarioIdAtualiza() + ", getDtUltAtualiza()=" + getDtUltAtualiza()
-				+ ", hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
-				+ "]";
-	}
-
+	    @Override
+	    public String toString() {
+	        return "br.com.senac.siscomee.model.entidades.RamosSetores[ id=" + id + " ]";
+	    }
 	
 }

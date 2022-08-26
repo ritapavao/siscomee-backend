@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -43,9 +44,8 @@ public class Fornecedores implements Serializable {
     private short inAtivo;
     //@JsonManagedReference
     @JoinColumn(name = "ramo_setor_id", referencedColumnName = "id")
-   // @ManyToOne(optional = false)
-    private int ramoSetorId;
-    //private RamosSetores nmRamoSetor;
+    @ManyToOne(optional = false)
+    private RamosSetores ramoSetorId;
     @Basic(optional = false)
     @Column(name = "usuario_id_atualiza")
     private int usuarioIdAtualiza;
@@ -53,7 +53,7 @@ public class Fornecedores implements Serializable {
     @Column(name = "dt_ult_atualiza")
     private Date dtUltAtualiza;
 	
-    
+	
     public Fornecedores() {
     }
 
@@ -112,7 +112,6 @@ public class Fornecedores implements Serializable {
 		this.inAtivo = inAtivo;
 	}
 
-	
 
 	public int getUsuarioIdAtualiza() {
 		return usuarioIdAtualiza;
@@ -130,12 +129,12 @@ public class Fornecedores implements Serializable {
 		this.dtUltAtualiza = dtUltAtualiza;
 	}
 
-	
-	public int getRamoSetorId() {
+
+	public RamosSetores getRamoSetorId() {
 		return ramoSetorId;
 	}
 
-	public void setRamoSetorId(int ramoSetorId) {
+	public void setRamoSetorId(RamosSetores ramoSetorId) {
 		this.ramoSetorId = ramoSetorId;
 	}
 
@@ -165,7 +164,7 @@ public class Fornecedores implements Serializable {
 
     @Override
     public String toString() {
-        return "br.com.montreal.siscoint.model.entidades.Fornecedores[ id=" + id + " ]";
+        return "br.com.senac.siscomee.model.entidades.Fornecedores[ id=" + id + " ]";
     }
 
 	
